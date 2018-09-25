@@ -1,29 +1,30 @@
-@SET_MAKE@
+ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
-SUBDIRS = panel-plugin
-
-AUTOMAKE_OPTIONS =							\
-	1.8								\
-	dist-bzip2
+SUBDIRS =								\
+	panel-plugin					\
+	icons
 
 distclean-local:
 	rm -rf *.cache *~
 
-dist-bz2: dist
-	zcat $(PACKAGE)-$(VERSION).tar.gz | bzip2 --best -c > $(PACKAGE)-$(VERSION).tar.bz2
+distuninstallcheck_listfiles = \
+	find . -type f -print | grep -v ./share/icons/hicolor/icon-theme.cache
 
-distcheck-bz2: distcheck
-	zcat $(PACKAGE)-$(VERSION).tar.gz | bzip2 --best -c > $(PACKAGE)-$(VERSION).tar.bz2
+rpm: dist
+	rpmbuild -ta $(PACKAGE)-$(VERSION).tar.gz
+	@rm -f $(PACKAGE)-$(VERSION).tar.gz
 
 .PHONY: ChangeLog
 
 ChangeLog: Makefile
-	(GIT_DIR=$(top_srcdir)/.git git log > .changelog.tmp \
+	(GIT_DIR=$(top_srcdir)/.git git log > .changelog.tmp 	\
 	&& mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) \
 	|| (touch ChangeLog; echo 'Git directory not found: installing possibly empty changelog.' >&2)
 
 dist-hook: ChangeLog
 
-EXTRA_DIST = 								\
-	README
+EXTRA_DIST =
 
+DISTCLEANFILES =
+
+# vi:set ts=8 sw=8 noet ai nocindent syntax=automake:

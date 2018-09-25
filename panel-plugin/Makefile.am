@@ -1,32 +1,67 @@
+AM_CPPFLAGS =																				\
+	-I$(top_srcdir)																		\
+	-DTHEMESDIR=\"$(datadir)/xfce4/weather/icons\" 		\
+	-DGEONAMES_USERNAME=\"@GEONAMES_USERNAME@\" 			\
+	-DPACKAGE_LOCALE_DIR=\"$(localedir)\"							\
+	-DG_LOG_DOMAIN=\"weather\"
+
+plugin_LTLIBRARIES = libweather.la
+
 plugindir = $(libdir)/xfce4/panel/plugins
-plugin_LTLIBRARIES = libappletweather.la
 
-libappletweather_la_CFLAGS =						\
-	-DPACKAGE_LOCALE_DIR=\"$(localedir)\"			\
-	@LIBXFCE4PANEL_CFLAGS@					\
-	@LIBXFCE4UI_CFLAGS@ -g
+libweather_la_SOURCES =				\
+	weather.c										\
+	weather.h										\
+	weather-config.c						\
+	weather-config.h						\
+	weather-data.c							\
+	weather-data.h							\
+	weather-debug.c							\
+	weather-debug.h							\
+	weather-icon.c							\
+	weather-icon.h							\
+	weather-parsers.c						\
+	weather-parsers.h						\
+	weather-search.c						\
+	weather-search.h						\
+	weather-summary.c						\
+	weather-summary.h						\
+	weather-translate.c					\
+	weather-translate.h
 
-libappletweather_LDFLAGS = 						\
-	-avoid-version 						\
-	-module 						\
-	-no-undefined 						\
-	-export-symbols-regex '^xfce_panel_module_(preinit|init|construct)'
+libweather_la_CFLAGS =				\
+	$(LIBXFCE4PANEL_CFLAGS)			\
+	$(LIBXFCE4UI_CFLAGS)				\
+	$(LIBXFCE4UTIL_CFLAGS)			\
+	$(GTK_CFLAGS)								\
+	$(SOUP_CFLAGS)							\
+	$(UPOWER_GLIB_CFLAGS)				\
+	$(LIBXML_CFLAGS)
 
-libappletweather_la_LIBADD =						\
-	@LIBXFCE4PANEL_LIBS@					\
-	@LIBXFCE4UI_LIBS@
+libweather_la_LIBADD =				\
+	$(LIBM)                     \
+	$(LIBXFCE4PANEL_LIBS)				\
+	$(LIBXFCE4UTIL_LIBS)				\
+	$(LIBXFCE4UI_LIBS)					\
+	$(GTK_LIBS)									\
+	$(LIBXML_LIBS)							\
+	$(SOUP_LIBS)
 
-libappletweather_la_SOURCES =		\
-	main.c
+libweather_la_LDFLAGS = 																							\
+	-avoid-version 																											\
+	-module 																														\
+	-no-undefined 																											\
+	-export-symbols-regex '^xfce_panel_module_(preinit|init|construct)' \
+	$(PLATFORM_LDFLAGS) 																								\
+	$(UPOWER_GLIB_LIBS)
 
 desktopdir = $(datadir)/xfce4/panel/plugins
-desktop_DATA = applet-weather.desktop
+desktop_in_files = weather.desktop.in
+desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
-EXTRA_DIST = 								\
-	applet-weather.desktop.in
-
-DISTCLEANFILES =							\
-	$(desktop_DATA)
+EXTRA_DIST = $(desktop_in_files)
 
 %.desktop: %.desktop.in
 	cp $< $@
+
+CLEANFILES = $(desktop_DATA)

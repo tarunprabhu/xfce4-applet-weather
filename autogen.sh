@@ -5,7 +5,7 @@
 #
 # Written for Xfce by Benedikt Meurer <benny@xfce.org>.
 
-export XDT_AUTOGEN_REQUIRED_VERSION="4.9.1"
+export XDT_AUTOGEN_REQUIRED_VERSION="4.7.0"
 
 (type xdt-autogen) >/dev/null 2>&1 || {
   cat >&2 <<EOF
@@ -16,5 +16,7 @@ autogen.sh: You don't seem to have the Xfce development tools installed on
 EOF
   exit 1
 }
+
+test -d m4 || mkdir m4
 
 xdt-autogen $@

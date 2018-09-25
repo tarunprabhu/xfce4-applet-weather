@@ -1,9 +1,0 @@
-[Xfce Panel]
-Type=X-XFCE-PanelPlugin
-Encoding=UTF-8
-Name=Weather Monitor
-Comment=Displays the weather
-Icon=weather
-X-XFCE-Module=appletweather
-X-XFCE-Internal=false
-X-XFCE-API=2.0
